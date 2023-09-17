@@ -69,6 +69,7 @@ export class MychartComponent implements OnInit {
     this.createHorizontalBarChart();
     this.createPieChartFromStock();
     this.createScatterPlot();
+    this.createLineChart();
   }
 
   createHorizontalBarChart() {
@@ -238,7 +239,7 @@ export class MychartComponent implements OnInit {
                 y: ratings[index],
               })),
               backgroundColor: 'white',
-              pointRadius: 7, // Increase the point size by setting a larger value
+              pointRadius: 5, // Increase the point size by setting a larger value
             },
           ],
         },
@@ -261,6 +262,76 @@ export class MychartComponent implements OnInit {
             y: {
               type: 'linear',
               position: 'left',
+              title: {
+                display: true,
+                text: 'Rating',
+                color: 'white',
+              },
+              ticks: {
+                color: 'white',
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: 'white',
+              },
+            },
+          },
+        },
+      });
+    });
+  }
+  createLineChart() {
+    const lineChartCanvas = document.getElementById(
+      'lineChart'
+    ) as HTMLCanvasElement;
+
+    // Fetch product data from an API (replace with your API URL)
+    this.http.get('https://dummyjson.com/products').subscribe((data: any) => {
+      // Extract data from the API response
+      const products = data.products;
+
+      // Sort products by rating in ascending order
+      products.sort((a: any, b: any) => a.rating - b.rating);
+
+      // Extract product names and ratings
+      const productNames = products.map((product: any) => product.title);
+      const ratings = products.map((product: any) => product.rating);
+
+      // Create a line chart
+      new Chart(lineChartCanvas, {
+        type: 'line',
+        data: {
+          labels: productNames, // Use product names as labels
+          datasets: [
+            {
+              label: 'Product Ratings',
+              data: ratings,
+              fill: false, // Do not fill area under the line
+              borderColor: 'white', // Line color
+              borderWidth: 2, // Line width
+              pointBackgroundColor: 'white', // Point color
+              pointRadius: 5, // Point size
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Products',
+                color: 'white',
+              },
+              ticks: {
+                color: 'white',
+              },
+            },
+            y: {
               title: {
                 display: true,
                 text: 'Rating',
