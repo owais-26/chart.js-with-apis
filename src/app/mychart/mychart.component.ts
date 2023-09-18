@@ -70,6 +70,7 @@ export class MychartComponent implements OnInit {
     this.createPieChartFromStock();
     this.createScatterPlot();
     this.createLineChart();
+    this.createStackedBarChart();
   }
 
   createHorizontalBarChart() {
@@ -242,7 +243,7 @@ export class MychartComponent implements OnInit {
                 y: ratings[index],
               })),
               backgroundColor: 'white',
-              pointRadius: 5, // Increase the point size by setting a larger value
+              pointRadius: 7, // Increase the point size by setting a larger value
             },
           ],
         },
@@ -320,7 +321,7 @@ export class MychartComponent implements OnInit {
               fill: false, // Do not fill area under the line
               borderColor: 'white', // Line color
               borderWidth: 2, // Line width
-              pointBackgroundColor: 'white', // Point color
+              pointBackgroundColor: 'red', // Point color
               pointRadius: 5, // Point size
             },
           ],
@@ -366,4 +367,80 @@ export class MychartComponent implements OnInit {
       });
     });
   }
+  createStackedBarChart() {
+    // Fetch cart data from an API (replace with your API URL)
+    this.http.get('https://dummyjson.com/carts').subscribe((data: any) => {
+      // Extract data from the API response
+      const carts = data.carts;
+      const total = carts.map((cart: any) => cart.total);
+      const discount = carts.map((cart: any) => cart.discountedTotal);
+      console.log(total)
+      console.log(discount)
+
+
+      const stackedBarChartCanvas = document.getElementById('stackedBarChart') as HTMLCanvasElement;
+
+      // Create a stacked bar chart for the aggregated data
+      new Chart(stackedBarChartCanvas, {
+        type: 'bar',
+        data: {
+          labels : total,
+          datasets: [
+            {
+              label: 'Total Price',
+              data: total,
+              backgroundColor: 'orange', // Bar color for total price
+            },
+            {
+              label: 'Discounted Prices',
+              data: discount,
+              backgroundColor: 'red', // Bar color for total discount
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              stacked: true,
+              title: {
+                display: true,
+                text: 'Products',
+                color: 'white',
+              },
+              ticks: {
+                color: 'white',
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Price',
+                color: 'white',
+              },
+              ticks: {
+                color: 'white',
+              },
+              stacked: true, // Enable stacking for the y-axis
+            },
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: 'white',
+              },
+            },
+            datalabels: {
+              color: 'white'
+            }
+          },
+        },
+      });
+    });
+  }
+
+
+
+
 }
