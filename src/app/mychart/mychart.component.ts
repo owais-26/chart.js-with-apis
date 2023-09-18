@@ -122,6 +122,7 @@ export class MychartComponent implements OnInit {
               },
             },
           },
+          
           plugins: {
             legend: {
               display: true,
@@ -135,6 +136,8 @@ export class MychartComponent implements OnInit {
             datalabels: {
               color: 'white',
             },
+            
+            
           },
         } as ChartOptions,
       });
@@ -278,6 +281,11 @@ export class MychartComponent implements OnInit {
                 color: 'white',
               },
             },
+            datalabels: {
+              display : false
+            
+
+            }
           },
         },
       });
@@ -348,6 +356,11 @@ export class MychartComponent implements OnInit {
                 color: 'white',
               },
             },
+            datalabels: {
+              display: false
+
+
+            }
           },
         },
       });
